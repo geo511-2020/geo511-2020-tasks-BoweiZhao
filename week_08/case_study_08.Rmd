@@ -7,6 +7,7 @@ output:
   pdf_document: default
   powerpoint_presentation: default
   word_document: default
+  github_document: default
 ---
 
 ```{r, include = FALSE}
