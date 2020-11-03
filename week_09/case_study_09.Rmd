@@ -5,6 +5,7 @@ date: "11/02/2020"
 output:
   html_document: default
   github_document: default
+always_allow_html: true
 ---
 
 ```{r, include = FALSE}
@@ -56,4 +57,4 @@ most_five_states =  storm_states %>% group_by(state) %>% summarize(storms=length
 kable(st_drop_geometry(most_five_states)) %>% kable_styling("striped") %>% row_spec(1, color = "red")
 ```
 
-
+learned how to remove geometry column from Collin
