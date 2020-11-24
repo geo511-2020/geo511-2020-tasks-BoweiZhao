@@ -1,7 +1,35 @@
 ---
 title: "Case Study 12"
-author: Your Name
-date: August 1, 2020
+author: Bowei Zhao
+date: 11/24/2020
 output: github_document
 ---
- 
+
+```{r, include = FALSE}
+library(dplyr)
+library(ggplot2)
+library(ggmap)
+library(htmlwidgets)
+library(widgetframe)
+library(tidyverse)
+library(rnoaa)
+library(xts)
+library(dygraphs)
+```
+
+## Dynamic HTML graph of Daily Temperatures
+```{r, echo = FALSE, message=FALSE, warning=FALSE}
+#download the data 
+d=meteo_tidy_ghcnd("USW00014733",
+                   date_min = "2016-01-01", 
+                   var = c("TMAX"),
+                   keep_flags=T) %>% 
+   mutate(date=as.Date(date),
+          tmax=as.numeric(tmax)/10) #Divide the tmax data by 10 to convert to degrees.
+
+#convert the raw data to a time series object 
+tmax_time = xts(d$tmax, order.by = d$date)
+dygraph(tmax_time, main = "Daily Maximum Temperature in Buffalo, NY") %>%
+  dySeries("V1", label = "Maximum Temperature") %>%
+  dyRangeSelector(dateWindow = c("2020-01-01", "2020-10-31"))
+```
