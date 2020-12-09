@@ -1,7 +1,40 @@
 ---
 title: "Case Study 11"
-author: Your Name
-date: August 1, 2020
+author: Bowei Zhao
+date: 11/17/2020
 output: github_document
 ---
- 
+
+
+```{r, include = FALSE}
+library(tidyverse)
+library(spData)
+library(sf)
+library(mapview) # new package that makes easy leaflet maps
+library(foreach)
+library(doParallel)
+library(tidycensus)
+registerDoParallel(4)
+getDoParWorkers() # check registered cores
+```
+
+## Use parallel computing to make a ‘dot map’ of the racial distribution in Buffalo, NY
+```{r, echo = FALSE, message=FALSE, warning=FALSE}
+racevars <- c(White = "P005003", 
+              Black = "P005004", 
+              Asian = "P005006", 
+              Hispanic = "P004003")
+
+options(tigris_use_cache = TRUE)
+erie <- get_decennial(geography = "block", variables = racevars, 
+                  state = "NY", county = "Erie County", geometry = TRUE, 
+                  summary_var = "P001001", cache_table=T) 
+
+extent = c(xmin=-78.9,xmax=-78.85,ymin=42.888,ymax=42.92)
+erie_crop = st_crop(erie, extent)
+
+erie_race = foreach(i = unique(erie_crop$variable), .combine=rbind) %do% {
+  filter(erie_crop, variable == i) %>% st_sample(size=.$value) %>% st_as_sf() %>% mutate(variable =i)
+  }
+mapview(erie_race, zcol = "variable", cex = 1, lwd = 0)
+```

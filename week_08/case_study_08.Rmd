@@ -1,7 +1,46 @@
 ---
-title: "Case Study 08"
-author: Your Name
-date: August 1, 2020
-output: github_document
+title: "Carbon Dioxide Concentrations at Mona Loa Observatory"
+author: "Bowei Zhao"
+date: "10/24/2020"
+output:
+  html_document: default
+  pdf_document: default
+  powerpoint_presentation: default
+  word_document: default
+  github_document: default
 ---
- 
+
+```{r, include = FALSE}
+library(tidyverse)
+library(kableExtra)
+```
+
+
+```{r, include = FALSE}
+dataurl="ftp://aftp.cmdl.noaa.gov/products/trends/co2/co2_annmean_mlo.txt"
+temp = read.delim(dataurl,skip=56, sep = ' ')
+co2_table = temp %>% select(3,6)
+colnames(co2_table) = c("year", "mean")
+```
+
+## Plot the temporal trend of annual mean carbon dioxide concentrations
+
+```{r, echo = FALSE}
+ggplot(co2_table, aes(x = year, y = mean)) + geom_line(color = "red") +
+  labs(x = "Year", y = "Mauna Loa Annual Mean_CO2(ppm)", title = "Annual Mean Carbon Dioxide Concentrations 1959-Present") + theme(plot.title = element_text(hjust = 0.5))
+```
+
+## Show the annual mean carbon dioxide concentrations in the last five years
+
+```{r, echo = FALSE}
+recent = co2_table %>% arrange(desc(year))
+recent_5 = recent[1:5,]
+knitr::kable(recent_5,"html") %>% kable_styling("striped") %>%
+  row_spec(1, color = "red") %>% as_image(width=10, file="recent_5.png")
+```
+
+
+```{r, eval = FALSE, include = FALSE}
+#use this code to render the outputs into four different formats
+rmarkdown::render("case_study_08.Rmd", output_format = "all")
+```

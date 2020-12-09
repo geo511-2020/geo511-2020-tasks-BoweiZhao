@@ -1,12 +1,9 @@
----
-title: "Case Study 10"
-author: Bowei Zhao
-date: 11/10/2020
-output: github_document
-always_allow_html: true
----
+Case Study 10
+================
+Bowei Zhao
+11/10/2020
 
-```{r, echo = TRUE, results = 'hide', message=FALSE, warning=FALSE}
+``` r
 library(raster)
 library(rasterVis)
 library(rgdal)
@@ -19,7 +16,7 @@ library(kableExtra)
 library(ncdf4) # to import data from netcdf format
 ```
 
-```{r, message=FALSE, warning=FALSE}
+``` r
 # Create afolder to hold the downloaded data
 dir.create("data",showWarnings = F) #create a folder to hold the data
 
@@ -32,18 +29,25 @@ download.file(lst_url,destfile="data/MOD11A2.006_aid0001.nc", mode="wb")
 ```
 
 ## Explore LULC data
-```{r, echo = TRUE, results = 'hide', message=FALSE, warning=FALSE}
+
+``` r
 # Load data into R
 lulc=stack("data/MCD12Q1.051_aid0001.nc",varname="Land_Cover_Type_1")
 lst=stack("data/MOD11A2.006_aid0001.nc",varname="LST_Day_1km")
 
 plot(lulc)
+```
 
+![](case_study_10_files/figure-gfm/unnamed-chunk-3-1.png)<!-- -->
+
+``` r
 lulc=lulc[[13]]
 plot(lulc)
 ```
 
-```{r, message=FALSE, warning=FALSE}
+![](case_study_10_files/figure-gfm/unnamed-chunk-3-2.png)<!-- -->
+
+``` r
 # Process Land Cover Data
 Land_Cover_Type_1 = c(
     Water = 0, 
@@ -75,7 +79,213 @@ lcd=data.frame(
 kable(head(lcd))
 ```
 
-```{r, message=FALSE, warning=FALSE}
+<table>
+
+<thead>
+
+<tr>
+
+<th style="text-align:left;">
+
+</th>
+
+<th style="text-align:right;">
+
+ID
+
+</th>
+
+<th style="text-align:left;">
+
+landcover
+
+</th>
+
+<th style="text-align:left;">
+
+col
+
+</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr>
+
+<td style="text-align:left;">
+
+Water
+
+</td>
+
+<td style="text-align:right;">
+
+0
+
+</td>
+
+<td style="text-align:left;">
+
+Water
+
+</td>
+
+<td style="text-align:left;">
+
+\#000080
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="text-align:left;">
+
+Evergreen Needleleaf forest
+
+</td>
+
+<td style="text-align:right;">
+
+1
+
+</td>
+
+<td style="text-align:left;">
+
+Evergreen Needleleaf forest
+
+</td>
+
+<td style="text-align:left;">
+
+\#008000
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="text-align:left;">
+
+Evergreen Broadleaf forest
+
+</td>
+
+<td style="text-align:right;">
+
+2
+
+</td>
+
+<td style="text-align:left;">
+
+Evergreen Broadleaf forest
+
+</td>
+
+<td style="text-align:left;">
+
+\#00FF00
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="text-align:left;">
+
+Deciduous Needleleaf forest
+
+</td>
+
+<td style="text-align:right;">
+
+3
+
+</td>
+
+<td style="text-align:left;">
+
+Deciduous Needleleaf forest
+
+</td>
+
+<td style="text-align:left;">
+
+\#99CC00
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="text-align:left;">
+
+Deciduous Broadleaf forest
+
+</td>
+
+<td style="text-align:right;">
+
+4
+
+</td>
+
+<td style="text-align:left;">
+
+Deciduous Broadleaf forest
+
+</td>
+
+<td style="text-align:left;">
+
+\#99FF99
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="text-align:left;">
+
+Mixed forest
+
+</td>
+
+<td style="text-align:right;">
+
+5
+
+</td>
+
+<td style="text-align:left;">
+
+Mixed forest
+
+</td>
+
+<td style="text-align:left;">
+
+\#339966
+
+</td>
+
+</tr>
+
+</tbody>
+
+</table>
+
+``` r
 # convert to raster (easy)
 lulc=as.factor(lulc)
 
@@ -83,7 +293,7 @@ lulc=as.factor(lulc)
 levels(lulc)=left_join(levels(lulc)[[1]],lcd)
 ```
 
-```{r, message=FALSE, warning=FALSE}
+``` r
 # plot it
 gplot(lulc)+
   geom_raster(aes(fill=as.factor(value)))+
@@ -95,21 +305,33 @@ gplot(lulc)+
   guides(fill=guide_legend(ncol=1,byrow=TRUE))
 ```
 
+![](case_study_10_files/figure-gfm/unnamed-chunk-6-1.png)<!-- -->
+
 ## Land Surface Temperature
 
-```{r, message=FALSE, warning=FALSE}
+``` r
 plot(lst[[1:12]])
+```
 
+![](case_study_10_files/figure-gfm/unnamed-chunk-7-1.png)<!-- -->
+
+``` r
 # Covert LST to Degrees C
 offs(lst)=-273.15
 plot(lst[[1:10]])
 ```
 
+![](case_study_10_files/figure-gfm/unnamed-chunk-7-2.png)<!-- -->
+
 ## Add Dates to Z (time) dimension
 
-```{r, message=FALSE, warning=FALSE}
+``` r
 names(lst)[1:5]
+```
 
+    ## [1] "X2000.02.18" "X2000.02.26" "X2000.03.05" "X2000.03.13" "X2000.03.21"
+
+``` r
 tdates=names(lst)%>%
   sub(pattern="X",replacement="")%>%
   as.Date("%Y.%m.%d")
@@ -120,7 +342,7 @@ lst=setZ(lst,tdates)
 
 ## Extract timeseries for a point
 
-```{r, message=FALSE, warning=FALSE}
+``` r
 lw=SpatialPoints(data.frame(x= -78.791547,y=43.007211))
 projection(lw) = "+proj=longlat"
 
@@ -134,22 +356,247 @@ ggplot(date_lst, aes(x = extract_date, y = extract_data)) + geom_point() +
   geom_smooth(n = 811, span = 0.05) + labs(x = "date", y = "Monthly Mean Land Surface Temperature")
 ```
 
+![](case_study_10_files/figure-gfm/unnamed-chunk-9-1.png)<!-- -->
+
 ## Summarize weekly data to monthly climatologies
 
-```{r, message=FALSE, warning=FALSE}
+``` r
 tmonth = as.numeric(format(getZ(lst),"%m"))
 lst_month = stackApply(lst, indices = tmonth, fun = mean)
 names(lst_month)=month.name
 gplot(lst_month) + geom_tile(aes(fill = value)) + facet_wrap(~variable) +
   scale_fill_gradient2(low = "blue",mid = "white", high = "red", midpoint = 15) +
   theme(axis.text=element_blank())
+```
+
+![](case_study_10_files/figure-gfm/unnamed-chunk-10-1.png)<!-- -->
+
+``` r
 monthly_mean = cellStats(lst_month,mean)
 kable(monthly_mean, col.names = c("Mean")) %>%  kable_styling(bootstrap_options = c("striped", "hover"))
 ```
 
+<table class="table table-striped table-hover" style="margin-left: auto; margin-right: auto;">
+
+<thead>
+
+<tr>
+
+<th style="text-align:left;">
+
+</th>
+
+<th style="text-align:right;">
+
+Mean
+
+</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr>
+
+<td style="text-align:left;">
+
+January
+
+</td>
+
+<td style="text-align:right;">
+
+\-2.127506
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="text-align:left;">
+
+February
+
+</td>
+
+<td style="text-align:right;">
+
+8.710271
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="text-align:left;">
+
+March
+
+</td>
+
+<td style="text-align:right;">
+
+18.172077
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="text-align:left;">
+
+April
+
+</td>
+
+<td style="text-align:right;">
+
+23.173591
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="text-align:left;">
+
+May
+
+</td>
+
+<td style="text-align:right;">
+
+26.990005
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="text-align:left;">
+
+June
+
+</td>
+
+<td style="text-align:right;">
+
+28.840144
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="text-align:left;">
+
+July
+
+</td>
+
+<td style="text-align:right;">
+
+27.358260
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="text-align:left;">
+
+August
+
+</td>
+
+<td style="text-align:right;">
+
+22.927727
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="text-align:left;">
+
+September
+
+</td>
+
+<td style="text-align:right;">
+
+15.477510
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="text-align:left;">
+
+October
+
+</td>
+
+<td style="text-align:right;">
+
+8.329881
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="text-align:left;">
+
+November
+
+</td>
+
+<td style="text-align:right;">
+
+0.586179
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="text-align:left;">
+
+December
+
+</td>
+
+<td style="text-align:right;">
+
+\-4.754134
+
+</td>
+
+</tr>
+
+</tbody>
+
+</table>
+
 ## Summarize Land Surface Temperature by Land Cover
 
-```{r, message=FALSE, warning=FALSE}
+``` r
 lulc2 = resample(lulc, lst, method="ngb")
 
 lcds1=cbind.data.frame(
@@ -165,5 +612,6 @@ ggplot(lst_lulc, aes(x = month, y = value)) + geom_jitter() + facet_wrap(~landco
   labs(x = "Month", y = "Monthly Mean Land Surface Temperature(C)", title = "Land Surface Temperature in Urban and Forest") +
   theme(axis.text.x = element_text(angle = 90)) + geom_violin(colour = "red", fill = "grey") +
   theme(plot.title = element_text(hjust = 0.5))
-
 ```
+
+![](case_study_10_files/figure-gfm/unnamed-chunk-11-1.png)<!-- -->
