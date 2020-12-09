@@ -1,0 +1,59 @@
+---
+title: "Analysis of the temporal and spatial distribution of COVID-19 in New York City and its correlation with demographic data"
+author: Bowei Zhao
+date: October 17, 2020
+output: github_document
+---
+
+# Introduction to problem/question
+
+COVID-19 is a new type of coronavirus that broke out globally this year, which has had a great impact on people's normal life and work. As one of the largest cities in the United States, New York City also has a lot of confirmed and mortality cases in this epidemic. Therefore, visual analysis of the epidemic situation in New York City and correlation analysis between COVID-19 cases and certain demographic data may reveal certain patterns, so as to make some targeted recommendations for New York City to fight the epidemic.
+  
+# Problem / Question
+
+This project is used to study the temporal and spatial distribution of COVID-19 in New York City and the correlation between the number of COVID-19 cases in New York City and certain demographic data.
+
+# Inspiring Examples
+
+## Example 1
+
+![](https://miro.medium.com/max/670/1*3gC3N5x-2ASg_wEOBGqtSw.png)
+
+This picture is drawn using zip code level New York City COVID-19 data. From this picture, we can clearly see which area has more confirmed cases and which area has fewer confirmed cases.
+
+## Example 2
+
+![](https://www.localhousingsolutions.org/wp-content/uploads/2018/08/race_census_tracts.jpg)
+![](https://4.bp.blogspot.com/-FunPeMXl8D4/WIn-YvJqIZI/AAAAAAAA_EQ/Rdfqo2cMffEUXGL0TCGYDlSZx10TdS6xACLcB/s1600/NYC_income.png)
+
+The above two pictures draw the ethnic distribution map and income distribution map of New York City respectively. By comparing these two pictures with the COVID-19 confirmed cases map, we can have an intuitive feeling about the relationship between them.
+
+## Example 3
+
+![](https://ars.els-cdn.com/content/image/1-s2.0-S2210670720306399-gr11.jpg)
+
+The above picture describes the correlation between confirmed COVID-19 cases and deaths and some demographic data such as income and poverty.
+
+# Proposed data sources
+
+1.[New York City Boundary Shapefile](https://www.census.gov/geographies/mapping-files/time-series/geo/carto-boundary-file.html)
+
+Because we need to draw a spatial distribution map of the zipcode level of COVID-19 in New York City, the boundary map of New York City is the most basic data. This data can be obtained from the Census Bureau website.
+
+2.[zipcode level New York City COVID-19 daily cases data](https://www1.nyc.gov/site/doh/covid/covid-19-data.page)
+
+The second data needed is the zipcode level confirmed and mortality cases of COVID-19 in New York City. Based on these data, we can draw the distribution map of COVID-19 on the border map of New York City.These data can be obtained from the New York City Health Department’s COVID-19 Data webpage. This webpage will update the latest day’s zipcode level confirmed and mortality cases every day.
+
+3.[Demographic data in New York City](https://data.census.gov/cedsci/profile?q=United%20States&g=0100000US)
+
+The third type data is New York City demographic data. These data can also be obtained from the Census Bureau website. I will select certain data such as ethnicity data, elderly population data, and income level data for analysis.
+
+# Proposed methods
+
+1. First of all, I will use ggplot2 and other auxiliary packages in R to plot the spatial distribution of COVID-19 confirmed cases and mortality cases at zipcode level of New York City, so as to understand which location in New York City has more confirmed and mortality cases, and which location has fewer confirmed and mortality cases.
+2. Secondly, I will still use ggplot2 and other packages to plot the distribution of some demographic data in New York City, and observe whether these distributions have some similarities with the distribution of COVID-19.
+3. Third, I will use Pearson and Spearman methods to perform regression analysis on COVID-19 and demographic data in R, and use these specific data results to see if there is a correlation between them.
+
+# Expected results
+
+First of all, I want to generate several spatial distribution maps of COVID-19 and demographic data in New York City. These maps must comply with the relevant specifications of GIS mapping, including scales, north arrows, legends, and so on. Secondly, I want to generate a regression analysis graph about COVID-19 and demographic data. In this graph, I want to include the scatter plot, regression line and regression coefficients between COVID-19 and these demographic data.
